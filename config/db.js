@@ -16,3 +16,5 @@ try{
     console.log(`error data base no is conection${err}`)
 }
     
+
+export default pool
