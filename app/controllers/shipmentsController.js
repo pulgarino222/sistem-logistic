@@ -1,15 +1,19 @@
-import {viewAllInformation,InsertNewDataModel,modelsOfUpdate,modelDelete,modelByGetId} from '../models/wharehouseModels.js'
+import { viewAllInformation,modelByGetId,InsertNewDataModel,modelsOfUpdate,modelDelete} from "../models/shipmentsModels.js"
 
+
+function findId(req){
+    const findId= req.params.id
+    return findId
+}
 
 export const getButAll=async (req,resp)=>{
-    
-    const wharehousesInfo=await viewAllInformation()
+    const shipmentsInfo=await viewAllInformation()
      // console.log(wharehousesInfo[0])  //solo estamos viendo que me esta trayendo con el [0] desestructuramos para que solo nos traiga un array 
      try{
-         if(wharehousesInfo){
+         if(shipmentsInfo){
              resp.json({
                  message: `all info in your view`,
-                 wharehousesInfo
+                 shipmentsInfo
              })
          }
      }catch(err){
@@ -33,37 +37,34 @@ export const getButAll=async (req,resp)=>{
         })}
         
     } catch (error) {
-        throw new Error(`can't find the informacion was a error `,error)
+        throw new Error(`can't find the informacion was a error   `,error)
     } 
 }
 
- export const InsertNewDataController=async(req,resp)=>{
-    const {name,location,drivers_id,vehicles_id}=req.body
-    const viewWarehouse=await InsertNewDataModel(name,location,drivers_id,vehicles_id)
+
+export const InsertNewDataController=async(req,resp)=>{
+    const {item,quantity,warehouses_id,vehicles_id}=req.body
+    const viewDrivers=await InsertNewDataModel(item,quantity,warehouses_id,vehicles_id)
     
     try {
         resp.status(201).json({
             message:"created success",
-            viewWarehouse
+            viewDrivers
         })
     } catch (error) {
-        throw new Error("no insert nothing in the post function controller ",error)   
+        throw new Error("no insert nothing in the post function controller drivers ",error)   
     }
-}
-
-
-function findId(req){
-    const findId= req.params.id
-    return findId
 }
 
 export const UpdateById=async(req,resp)=>{
     
     const dataForUpdate={
-        name:req.body.name,
-        location:req.body.location
+        item:req.body.item,
+        quantity:req.body.quantity,
+        warehousesId:req.body.warehouses_id,
+        vehiclesId:req.body.vehicles_id
     }
-    const [[[dataThatUpdate]]]= await modelsOfUpdate(dataForUpdate.name,dataForUpdate.location,findId(req))
+    const [[[dataThatUpdate]]]= await modelsOfUpdate(dataForUpdate.item,dataForUpdate.quantity,dataForUpdate.warehousesId,dataForUpdate.vehiclesId ,findId(req))
 
     try{
         resp.status(203).json({
@@ -71,11 +72,9 @@ export const UpdateById=async(req,resp)=>{
             dataThatUpdate
         })
     }catch(err){
-        throw new Error("error from controller of Update",err)
-
+        throw new Error("error from controller of Update ",err)
     }
 }
-
 
 export const deleteById=async(req,resp)=>{
     const deleteObject=await modelDelete(findId(req))
@@ -90,4 +89,3 @@ export const deleteById=async(req,resp)=>{
     }
    
 }
-
